@@ -33,17 +33,23 @@ function App() {
   }, []);
 
   const handlePostCreated = (newPost) => {
-    // Add new post with isEditing: false
-    setPosts([{ ...newPost, isEditing: false }, ...posts]);
+    // Ensure createdDateTime exists (fallback to now if backend didn't set it)
+    const normalized = {
+      ...newPost,
+      createdDateTime: newPost.createdDateTime || new Date().toISOString(),
+      isEditing: false
+    };
+    setPosts([normalized, ...posts]);
   };
 
   // Function to update the posts list after a successful PUT request
   const handlePostUpdated = (updatedPost) => {
     setPosts(
-      // Map through the posts array
       posts.map(post =>
-        // If the post ID matches, replace it with the updated data and exit edit mode
-        post.id === updatedPost.id ? { ...updatedPost, isEditing: false } : post
+        post.id === updatedPost.id
+          // Merge to avoid losing any fields not returned by server
+          ? { ...post, ...updatedPost, isEditing: false }
+          : post
       )
     );
   };
@@ -116,24 +122,24 @@ function App() {
                     />}
                   <p>— Posted by: <strong>{post.author}</strong></p>
 
-                  {/* 💥 FIX APPLIED: Changed the outer <p> to a <div> */}
                   <div className="timestamp">
-                    <span>
-                      Created: {new Date(post.createdDateTime).toLocaleString()}
-                      {post.createdDateTime !== post.modifiedDateTime &&
-                        <span style={{ marginLeft: '10px' }}> (Edited)</span>
-                      }
-                    </span>
+                    <div>
+                      Created: {post.createdDateTime ? new Date(post.createdDateTime).toLocaleString() : 'Unknown'}
+                    </div>
+
+                    {post.modifiedDateTime && post.modifiedDateTime !== post.createdDateTime && (
+                      <div style={{ marginTop: '4px', fontStyle: 'italic' }}>
+                        Edited: {new Date(post.modifiedDateTime).toLocaleString()}
+                      </div>
+                    )}
 
                     <div className="actions">
-                      {/* Edit Button */}
                       <button
                         className="edit-btn"
                         onClick={() => toggleEdit(post.id)}
                       >
                         Edit
                       </button>
-                      {/* Delete Button */}
                       <button
                         className="delete-btn"
                         onClick={() => handleDeletePost(post.id)}
@@ -141,7 +147,7 @@ function App() {
                         Delete
                       </button>
                     </div>
-                  </div> {/* This is the closing </div> for .timestamp */}
+                  </div>
                 </>
               )}
             </div>
