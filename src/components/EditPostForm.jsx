@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8080/api/facebook/posts';
+const API_URL = 'https://post-api-tagm.onrender.com/api/facebook/posts';
 
 const EditPostForm = ({ post, onUpdateSuccess, onCancelEdit }) => {
     // Initialize form state with the current post's content and imageUrl

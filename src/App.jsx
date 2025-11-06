@@ -8,7 +8,7 @@ function App() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const API_URL = 'http://localhost:8080/api/facebook/posts';
+  const API_URL = 'https://post-api-tagm.onrender.com/api/facebook/posts';
 
   const fetchPosts = () => {
     setLoading(true);

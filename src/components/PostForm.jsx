@@ -8,7 +8,7 @@ const PostForm = ({ onPostCreated }) => {
         imageUrl: ''
     });
     
-    const API_URL = 'http://localhost:8080/api/facebook/posts';
+    const API_URL = 'https://post-api-tagm.onrender.com/api/facebook/posts';
 
     const handleChange = (e) => {
         const { name, value } = e.target;
